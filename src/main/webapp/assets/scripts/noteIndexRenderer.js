@@ -72,7 +72,7 @@ export async function renderNote(container, note)
 export async function renderNoteIndex(notes)
 {
     await clearNoteIndex();
-    let notesContainer = await renderNotesContainer();
+    let notesContainer = await renderNotesContainer(notes);
     await renderNoteContainerTitle(notesContainer);
 
     for (const note of notes) {
