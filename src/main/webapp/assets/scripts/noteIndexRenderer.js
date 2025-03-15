@@ -8,11 +8,9 @@ export async function clearNoteIndex()
     notesContainer.innerHTML = "";
 }
 
-export async function renderNoteIndex(notes)
+export async function renderNotesContainer(notes)
 {
-    await clearNoteIndex();
     let notesContainer = document.getElementById("note-index");
-
     notesContainer.innerHTML = "<p>Loading notes...</p>";
     if(notes.length === 0)
     {
@@ -21,46 +19,63 @@ export async function renderNoteIndex(notes)
     }
 
     notesContainer.innerHTML = "";
+    return notesContainer;
+}
+
+export async function renderNoteContainerTitle(container)
+{
     let noteContainerTitle = document.createElement("div");
     noteContainerTitle.id = "note-index-title";
     noteContainerTitle.textContent = "Note Index";
-    notesContainer.parentNode.insertBefore(noteContainerTitle, notesContainer);
+    container.parentNode.insertBefore(noteContainerTitle, container);
+}
+
+export async function renderNote(container, note)
+{
+    let noteContainerElement = document.createElement("div");
+    let noteUUIDElement = document.createElement("div");
+    let noteTitleElement = document.createElement("div");
+    let noteSummaryElement = document.createElement("div");
+    let noteCategoryContainer = document.createElement("div");
+
+    noteContainerElement.classList.add("note-index-item");
+    noteUUIDElement.classList.add("note-index-item-uuid");
+    noteTitleElement.classList.add("note-index-item-title");
+    noteSummaryElement.classList.add("note-index-item-summary");
+    noteCategoryContainer.style.display = "flex";
+    noteCategoryContainer.style.flexWrap = "wrap";
+    noteCategoryContainer.style.gap = "0.2rem";
+    noteCategoryContainer.style.padding = "0.2rem 0";
+
+    noteContainerElement.onclick = async (ev) => await setSelectedNote(note.uuid);
+
+    noteUUIDElement.textContent = note.uuid;
+    noteTitleElement.textContent = note.title || "-No Name-";
+    noteSummaryElement.textContent = note.summary || "-No Summary-";
+
+    noteContainerElement.appendChild(noteUUIDElement);
+    noteContainerElement.appendChild(noteTitleElement);
+    noteContainerElement.appendChild(noteSummaryElement);
+    noteContainerElement.appendChild(noteCategoryContainer);
+    container.appendChild(noteContainerElement);
+
+    for(const category of note.categories) {
+        const categoryChip = document.createElement("div");
+        categoryChip.classList.add("note-editor-category-chip");
+        const categoryChipText = document.createElement("span");
+        categoryChipText.textContent = category;
+        categoryChip.appendChild(categoryChipText);
+        noteCategoryContainer.appendChild(categoryChip);
+    }
+}
+
+export async function renderNoteIndex(notes)
+{
+    await clearNoteIndex();
+    let notesContainer = await renderNotesContainer();
+    await renderNoteContainerTitle(notesContainer);
 
     for (const note of notes) {
-        let noteContainerElement = document.createElement("div");
-        let noteUUIDElement = document.createElement("div");
-        let noteTitleElement = document.createElement("div");
-        let noteSummaryElement = document.createElement("div");
-        let noteCategoryContainer = document.createElement("div");
-
-        noteContainerElement.classList.add("note-index-item");
-        noteUUIDElement.classList.add("note-index-item-uuid");
-        noteTitleElement.classList.add("note-index-item-title");
-        noteSummaryElement.classList.add("note-index-item-summary");
-        noteCategoryContainer.style.display = "flex";
-        noteCategoryContainer.style.flexWrap = "wrap";
-        noteCategoryContainer.style.gap = "0.2rem";
-        noteCategoryContainer.style.padding = "0.2rem 0";
-
-        noteContainerElement.onclick = async (ev) => await setSelectedNote(note.uuid);
-
-        noteUUIDElement.textContent = note.uuid;
-        noteTitleElement.textContent = note.title || "-No Name-";
-        noteSummaryElement.textContent = note.summary || "-No Summary-";
-
-        noteContainerElement.appendChild(noteUUIDElement);
-        noteContainerElement.appendChild(noteTitleElement);
-        noteContainerElement.appendChild(noteSummaryElement);
-        noteContainerElement.appendChild(noteCategoryContainer);
-        notesContainer.appendChild(noteContainerElement);
-
-        for(const category of note.categories) {
-            const categoryChip = document.createElement("div");
-            categoryChip.classList.add("note-editor-category-chip");
-            const categoryChipText = document.createElement("span");
-            categoryChipText.textContent = category;
-            categoryChip.appendChild(categoryChipText);
-            noteCategoryContainer.appendChild(categoryChip);
-        }
+        await renderNote(notesContainer, note);
     }
 }

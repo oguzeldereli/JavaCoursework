@@ -1,6 +1,7 @@
 package com.guzeldereli.coursework.cw.servlets;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.guzeldereli.coursework.cw.common.RequestObjectGetter;
 import com.guzeldereli.coursework.cw.models.NoteFragment;
 import com.guzeldereli.coursework.cw.services.FragmentService;
 import jakarta.inject.Inject;
@@ -23,12 +24,10 @@ public class UpdateFragmentServlet extends HttpServlet
     {
         response.setContentType("application/json");
 
-        JsonObject json;
-        try (JsonReader reader = Json.createReader(request.getInputStream())) {
-            json = reader.readObject();
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.getWriter().write("{ \"success\": false, \"error\": \"Failed to parse JSON\" }");
+        JsonObject json = RequestObjectGetter.getJson(request);
+        if (json == null)
+        {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
 

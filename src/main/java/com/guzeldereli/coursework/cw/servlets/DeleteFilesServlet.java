@@ -1,5 +1,6 @@
 package com.guzeldereli.coursework.cw.servlets;
 
+import com.guzeldereli.coursework.cw.common.RequestObjectGetter;
 import com.guzeldereli.coursework.cw.services.FileService;
 import jakarta.inject.Inject;
 import jakarta.json.Json;
@@ -23,11 +24,10 @@ public class DeleteFilesServlet extends HttpServlet
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        JsonObject json;
-        try (JsonReader reader = Json.createReader(request.getInputStream())) {
-            json = reader.readObject();
-        } catch (Exception e) {
-            e.printStackTrace();
+        JsonObject json = RequestObjectGetter.getJson(request);
+        if (json == null)
+        {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
 

@@ -25,10 +25,7 @@ export async function loadNotes() {
     const categories = categoryBox.value.split(',').map(cat => cat.trim()).filter(cat => cat !== "");
     const searchQuery = searchBox.value ? `query=${encodeURIComponent(searchBox.value)}` : '';
 
-    // Format categories as multiple `category` query parameters
     const categoryParams = categories.map(cat => `category=${encodeURIComponent(cat)}`).join('&');
-
-    // Construct final query string
     const queryParams = [searchQuery, categoryParams].filter(param => param).join('&');
 
     try {

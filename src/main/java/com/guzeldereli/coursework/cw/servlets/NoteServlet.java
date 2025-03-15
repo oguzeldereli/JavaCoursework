@@ -22,10 +22,6 @@ public class NoteServlet extends HttpServlet
     @Inject
     private NoteService noteService;
 
-    public void init() {
-
-    }
-
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException
     {
         response.setContentType("application/json");
@@ -34,12 +30,12 @@ public class NoteServlet extends HttpServlet
         String[] categories = request.getParameterValues("category");
         if (query != null && !query.isEmpty())
         {
-            // no limit for now
+            // no limit needed, only for future support
             ArrayList<Triple<Note, Boolean, Integer>> results = noteService.SearchNotes(query, -1);
             notes = results.stream()
-                    .filter(Triple::getMiddle) // Equivalent to Triple::getMiddle
-                    .sorted(Comparator.comparing(Triple::getRight, Comparator.reverseOrder())) // Sort by right in descending order
-                    .map(Triple::getLeft) // Equivalent to Triple::getLeft
+                    .filter(Triple::getMiddle)
+                    .sorted(Comparator.comparing(Triple::getRight, Comparator.reverseOrder()))
+                    .map(Triple::getLeft)
                     .collect(Collectors.toCollection(ArrayList::new));
         }
         else
@@ -73,9 +69,5 @@ public class NoteServlet extends HttpServlet
     public void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException
     {
         response.setContentType("application/json");
-    }
-
-    public void destroy()
-    {
     }
 }

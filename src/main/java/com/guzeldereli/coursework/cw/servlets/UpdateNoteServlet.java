@@ -1,6 +1,8 @@
 package com.guzeldereli.coursework.cw.servlets;
 
 import java.io.*;
+
+import com.guzeldereli.coursework.cw.common.RequestObjectGetter;
 import com.guzeldereli.coursework.cw.models.Note;
 import com.guzeldereli.coursework.cw.services.NoteService;
 import jakarta.inject.Inject;
@@ -22,34 +24,19 @@ public class UpdateNoteServlet extends HttpServlet
     @Inject
     private NoteService noteService;
 
-    public void init() {
-
-    }
-
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException
-    {
-        return;
-    }
-
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException
     {
         response.setContentType("application/json");
 
-        JsonObject json;
-        try (JsonReader reader = Json.createReader(request.getInputStream())) {
-            json = reader.readObject();
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.getWriter().write("{ \"success\": false, \"error\": \"Failed to parse JSON\" }");
+        JsonObject json = RequestObjectGetter.getJson(request);
+        if (json == null)
+        {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
 
         Note note =  Note.DeserializeFromJson(json.toString());
         boolean success = noteService.UpdateNote(note);
         response.getWriter().write("{ \"success\":" + (success ? "true" : "false") + "}");
-    }
-
-    public void destroy()
-    {
     }
 }

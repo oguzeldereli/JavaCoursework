@@ -1,6 +1,8 @@
 package com.guzeldereli.coursework.cw.servlets;
 
 import java.io.*;
+
+import com.guzeldereli.coursework.cw.common.RequestObjectGetter;
 import com.guzeldereli.coursework.cw.models.Note;
 import com.guzeldereli.coursework.cw.services.NoteService;
 import jakarta.inject.Inject;
@@ -36,15 +38,10 @@ public class DeleteNoteServlet extends HttpServlet
     {
         response.setContentType("application/json");
 
-        JsonObject json;
-        try (JsonReader reader = Json.createReader(request.getInputStream()))
+        JsonObject json = RequestObjectGetter.getJson(request);
+        if (json == null)
         {
-            json = reader.readObject();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            response.getWriter().write("{ \"success\": false, \"error\": \"Failed to parse JSON\" }");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
 
