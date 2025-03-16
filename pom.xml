@@ -4,17 +4,21 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.guzeldereli.coursework</groupId>
+    <groupId>com.guzeldereli.coursework.cw</groupId>
     <artifactId>cw</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>cw</name>
     <packaging>war</packaging>
 
     <properties>
+        <tomcat.version>11.0.4</tomcat.version>
+        <jsp.version>4.0.1</jsp.version>
+        <java.version>23</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.target>8</maven.compiler.target>
-        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
         <junit.version>5.11.0</junit.version>
+        <main.class>com.guzeldereli.coursework.cw.main.Main</main.class>
     </properties>
 
     <dependencies>
@@ -67,6 +71,22 @@
             <artifactId>jakarta.json</artifactId>
             <version>2.0.1</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+            <version>${tomcat.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-jasper</artifactId>
+            <version>${tomcat.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-jsp-api</artifactId>
+            <version>${tomcat.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -74,6 +94,27 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.4.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <executable>java</executable>
+                    <arguments>
+                        <argument>-classpath</argument>
+                        <classpath />
+                        <argument>${main.class}</argument>
+                    </arguments>
+                    <workingDirectory>${project.basedir}</workingDirectory>
+                </configuration>
             </plugin>
         </plugins>
     </build>
