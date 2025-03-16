@@ -42,6 +42,7 @@ html, body {
 
 .note-finder {
     display: flex;
+    flex-wrap: wrap;
     width: 100%;
     border: 1px solid #1f1f1f;
     border-radius: 5px;
@@ -57,23 +58,17 @@ html, body {
         border-right: 1px solid #1f1f1f;
     }
 
-    & select {
-        border: none;
-        padding: 0 0.3rem;
-        margin-right: 0.3rem;
-        border-left: 1px solid #1f1f1f;
-
-        &:focus-visible {
-            outline: none;
-        }
-    }
-
     & button {
         background-color: #0077B6;
         border: none;
         color: white;
-        padding: 0 1rem;
+        padding: 0.6rem 1rem;
         font-weight: bold;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #004b73;
+        }
     }
 }
 
@@ -112,12 +107,18 @@ html, body {
 
     & .note-index-item-title {
         font-family: "Montserrat", sans-serif;
+        text-wrap: wrap;
+        text-overflow: ellipsis;
         font-size: 1.5rem;
+        word-break: break-word;
         font-weight: 500;
     }
 
     & .note-index-item-summary {
         font-family: "Montserrat", sans-serif;
+        text-wrap: wrap;
+        text-overflow: ellipsis;
+        word-break: break-word;
         font-size: 1rem;
         font-weight: 300;
     }

@@ -51,35 +51,40 @@ export async function deleteSelectedNote()
     await setSelectedNote(null);
 }
 
+let updateTimer;
 export async function updateSelectedNote(changeFunction)
 {
-    if(!selectedNoteUUID || !selectedNote)
-    {
-        return;
-    }
+    clearTimeout(updateTimer);
+    updateTimer = setTimeout(async () => {
+        if(!selectedNoteUUID || !selectedNote)
+        {
+            return;
+        }
 
-    changeFunction(selectedNote);
+        changeFunction(selectedNote)
+        console.log("updated");
 
-    const response = await fetch("notes/update", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Content-Length": JSON.stringify(selectedNote).length.toString()
-        },
-        body: JSON.stringify(selectedNote)
-    });
-    if(!response.ok)
-    {
-        console.log("A problem occurred while updating the note.");
-    }
+        const response = await fetch("notes/update", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Content-Length": JSON.stringify(selectedNote).length.toString()
+            },
+            body: JSON.stringify(selectedNote)
+        });
+        if(!response.ok)
+        {
+            console.log("A problem occurred while updating the note.");
+        }
 
-    const {success} = await response.json();
-    if(!success)
-    {
-        console.log("A problem occurred while updating the note.");
-    }
+        const {success} = await response.json();
+        if(!success)
+        {
+            console.log("A problem occurred while updating the note.");
+        }
 
-    await loadNotes();
+        await loadNotes();
+    }, 500);
 }
 
 export async function AddFragmentToSelectedNote(type)
