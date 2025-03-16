@@ -29,11 +29,11 @@ public class Main
                 {
                     tomcat.stop();
                     tomcat.destroy();
-                    logger.info("Tomcat has shut down normally.");
+                    // logger.info("Tomcat has shut down normally.");
                 }
             } catch (Exception e)
             {
-                logger.log(Level.SEVERE, "Error shutting down Tomcat", e);
+                // logger.log(Level.SEVERE, "Error shutting down Tomcat", e);
             }
         });
         Runtime.getRuntime().addShutdownHook(shutdownHook);
@@ -54,7 +54,7 @@ public class Main
             fileHandler.setLevel(Level.INFO);
             logger.addHandler(fileHandler);
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Failed to create log file", e);
+            // logger.log(Level.SEVERE, "Failed to create log file", e);
         }
 
         logger.setLevel(Level.INFO);
@@ -95,14 +95,14 @@ public class Main
             setResources(context, targetClassesDirectory);
 
             tomcat.start();
-            logger.info("Server started successfully on port " + DEFAULT_PORT);
+            // logger.info("Server started successfully on port " + DEFAULT_PORT);
             tomcat.getServer().await();
         } catch (IllegalArgumentException e)
         {
-            logger.log(Level.SEVERE, "Configuration error", e);
+            // logger.log(Level.SEVERE, "Configuration error", e);
         } catch (Exception e)
         {
-            logger.log(Level.SEVERE, "Error occurred while starting the server", e);
+            // logger.log(Level.SEVERE, "Error occurred while starting the server", e);
         }
     }
 }
